@@ -119,6 +119,14 @@ grobid:
         window: 50
         nbMaxIterations: 2000
 
+    - name: "segmentation-sdo-ietf"
+      engine: "wapiti"
+      wapiti:
+        # wapiti training parameters, they will be used at training time only
+        epsilon: 0.0000001
+        window: 50
+        nbMaxIterations: 2000
+
     - name: "fulltext"
       # at this time, must always be CRF wapiti, the input sequence size is too large for a Deep Learning implementation
       engine: "wapiti"
@@ -129,8 +137,8 @@ grobid:
         nbMaxIterations: 1500
 
     - name: "header"
-      #engine: "wapiti"
-      engine: "delft"
+      engine: "wapiti"
+      #engine: "delft"
       wapiti:
         # wapiti training parameters, they will be used at training time only
         epsilon: 0.000001
@@ -154,8 +162,8 @@ grobid:
           batch_size: 9
 
     - name: "header-article-light"
-#      engine: "wapiti"
-      engine: "delft"
+      engine: "wapiti"
+#      engine: "delft"
       wapiti:
         # wapiti training parameters, they will be used at training time only
         epsilon: 0.000001
@@ -166,8 +174,8 @@ grobid:
         useELMo: false
 
     - name: "header-article-light-ref"
-#      engine: "wapiti"
-      engine: "delft"
+      engine: "wapiti"
+#      engine: "delft"
       wapiti:
         # wapiti training parameters, they will be used at training time only
         epsilon: 0.000001
@@ -177,9 +185,17 @@ grobid:
         architecture: "BidLSTM_ChainCRF_FEATURES"
         useELMo: false
 
+    - name: "header-sdo-ietf"
+      engine: "wapiti"
+      wapiti:
+        # wapiti training parameters, they will be used at training time only
+        epsilon: 0.000001
+        window: 30
+        nbMaxIterations: 1500
+
     - name: "reference-segmenter"
-      #engine: "wapiti"
-      engine: "delft"
+      engine: "wapiti"
+      #engine: "delft"
       wapiti:
         # wapiti training parameters, they will be used at training time only
         epsilon: 0.00001
@@ -241,15 +257,15 @@ grobid:
         architecture: "BidLSTM_CRF"
 
     - name: "affiliation-address"
-      #engine: "wapiti"
-      engine: "delft"
+      engine: "wapiti"
+      #engine: "delft"
       delft:
         # deep learning parameters
         architecture: "BidLSTM_CRF_FEATURES"
 
     - name: "citation"
-      #engine: "wapiti"
-      engine: "delft"
+      engine: "wapiti"
+      #engine: "delft"
       wapiti:
         # wapiti training parameters, they will be used at training time only
         epsilon: 0.00001
@@ -271,8 +287,8 @@ grobid:
           batch_size: 50
 
     - name: "patent-citation"
-      #engine: "wapiti"
-      engine: "delft"
+      engine: "wapiti"
+      #engine: "delft"
       wapiti:
         # wapiti training parameters, they will be used at training time only
         epsilon: 0.0001
@@ -291,8 +307,8 @@ grobid:
           batch_size: 40
 
     - name: "funding-acknowledgement"
-      #engine: "wapiti"
-      engine: "delft"
+      engine: "wapiti"
+      #engine: "delft"
       wapiti:
         # wapiti training parameters, they will be used at training time only
         epsilon: 0.00001
@@ -316,7 +332,7 @@ grobid:
     - name: "copyright"
       # at this time, we only have a DeLFT implementation,
       # use "wapiti" if the deep learning library JNI is not available and model will then be ignored
-#      engine: "delft"
+      #engine: "delft"
       engine: "wapiti"
       delft:
         # deep learning parameters
@@ -327,7 +343,7 @@ grobid:
     - name: "license"
       # at this time, for being active, it must be DeLFT, no other implementation is available
       # use "wapiti" if the deep learning library JNI is not available and model will then be ignored
-#      engine: "delft"
+      #engine: "delft"
       engine: "wapiti"
       delft:
         # deep learning parameters
@@ -364,7 +380,7 @@ logging:
     com.squarespace.jersey2.guice.JerseyGuiceUtils: "OFF"
   appenders:
     - type: console
-      threshold: WARN
+      threshold: INFO
       timeZone: UTC
       # uncomment to have the logs in json format
       #layout:
