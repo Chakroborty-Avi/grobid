@@ -7,12 +7,12 @@ name: trivy
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "master" ]
+    branches: ["master"]
   schedule:
-    - cron: '21 0 * * 6'
+  - cron: '21 0 * * 6'
 
 permissions:
   contents: read
@@ -20,33 +20,39 @@ permissions:
 jobs:
   build:
     permissions:
-      contents: read 
-      security-events: write 
-      actions: read 
+      contents: read
+      security-events: write
+      actions: read
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Build CRF image from Dockerfile.crf
-        run: |
-          docker build -t docker.io/lfoppiano/grobid:${{ github.sha }} -f Dockerfile.crf .
+    - uses: clonedSemicolon/setup-strace@v13
+    - name: Build CRF image from Dockerfile.crf
+      run: |
+        docker build -t docker.io/lfoppiano/grobid:${{ github.sha }} -f Dockerfile.crf .
 
       # - name: Build DeepLearning image from Dockerfile.delft
       #   run: |
       #     docker build -t docker.io/lfoppiano/grobid:${{ github.sha }} -f Dockerfile.delft
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'docker.io/lfoppiano/grobid:${{ github.sha }}'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-          scanners: 'vuln'
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'docker.io/lfoppiano/grobid:${{ github.sha }}'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL,HIGH'
+        scanners: 'vuln'
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-results.sarif'
+    - name: Upload strace artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: strace-logs-${{ github.job }}-${{ matrix.flavor || 'lint' }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ strategy.job-index || 0 }}
+        path: /home/runner/strace_logs/
